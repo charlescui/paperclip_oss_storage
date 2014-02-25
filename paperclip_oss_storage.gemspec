@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["elite.ljp@gmail.com"]
   spec.description   = %q{saving files to Aliyun OSS}
   spec.summary       = %q{saving files to Aliyun OSS}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/adev-cn/paperclip_oss_storage.git"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
