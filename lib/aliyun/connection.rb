@@ -13,7 +13,7 @@ module Aliyun
       @aliyun_access_key = options[:access_key]
       @aliyun_bucket = options[:bucket]
 
-      data_centre = options[:data_centre].to_s.downcase == 'qingdao' ? 'qingdao' : 'hangzhou'
+      data_centre = options[:data_centre].try(:to_s).try(:downcase) || 'hangzhou'
       internal = options[:internal] == true ? true : false
       @aliyun_data_centre = "oss-cn-#{data_centre}#{internal ? '-internal' : nil}.aliyuncs.com"
 
