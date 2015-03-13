@@ -93,7 +93,7 @@ true/false
       bucket_path = get_bucket_path(path)
       date = gmtdate
       headers = {
-        "Host" => @aliyun_upload_host,
+        "Host" => URI.parse(@aliyun_upload_host).host,
         "Date" => date,
         "Authorization" => sign("HEAD", bucket_path, "", "", "", date)
       }
