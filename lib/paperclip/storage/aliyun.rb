@@ -2,10 +2,11 @@ module Paperclip
   module Storage
     module Aliyun
       def self.extended(base)
+
       end
 
       def exists?(style = default_style)
-        oss_connection.exists? url(style)
+        oss_connection.exists? get_path_with_url_style(style)
       end
 
       def flush_writes #:nodoc:
@@ -16,8 +17,7 @@ module Paperclip
             # 要提供URI的path部分才正确，否则403
             # remove query string
             # aliyun not support attachment path with query
-            u = URI.parse url(style_name)
-            oss_connection.put u.path, f
+            oss_connection.put get_path_with_url_style(style_name), f
           }
         end
 
@@ -28,7 +28,7 @@ module Paperclip
 
       def flush_deletes #:nodoc:
         @queued_for_delete.each do |path|
-          oss_connection.delete path
+          oss_connection.delete get_path_with_url(path)
         end
 
         @queued_for_delete = []
@@ -37,7 +37,8 @@ module Paperclip
       def copy_to_local_file(style = default_style, local_dest_path)
         log("copying #{url(style)} to local file #{local_dest_path}")
         local_file = ::File.open(local_dest_path, 'wb')
-        remote_file_str = oss_connection.get url(style)
+
+        remote_file_str = oss_connection.get get_path_with_url_style(style)
         local_file.write(remote_file_str)
         local_file.close
       end
@@ -46,6 +47,15 @@ module Paperclip
         return @oss_connection if @oss_connection
 
         @oss_connection ||= ::Aliyun::Connection.new
+      end
+
+      def get_path_with_url(path)
+        u = URI.parse path
+        u and u.path
+      end
+
+      def get_path_with_url_style(style)
+        get_path_with_url url(style)
       end
     end
   end
